@@ -5,19 +5,22 @@ import NewsSites from "./components/NewsSites";
 import News from "./components/News";
 import axios from "axios";
 import bg from "./images/bg_img.jpg";
+import NewsFeedHome from "./components/NewsFeedHome";
 
 const LOAD_NEWS_REST_API_URL = "http://localhost:8080/postRssUrl";
 const NEWS_SITES_REST_API_URL = "http://localhost:8080/getAllNewsSites";
-const GET_NEWS_REST_API_URL = "http://localhost:8080/getAllNews";
+const NEWS_REST_API_URL = "http://localhost:8080/getAllNews";
 
 export const store = createContext();
 
 function App() {
   const [sites, setsites] = useState([]);
   const [news, setnews] = useState([]);
+  const [allNews, setallnews] = useState([]);
   const [selectedSites, setselectedSites] = useState(new Set());
 
   useEffect(() => {
+    getAllNews();
     getAllNewsSites();
     console.log("mount");
   }, []);
@@ -32,6 +35,17 @@ function App() {
           setsites(response.data);
           console.log(sites);
         }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const getAllNews = () => {
+    axios
+      .get(NEWS_REST_API_URL)
+      .then((response) => {
+        setallnews(response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -54,10 +68,10 @@ function App() {
       });
   };
 
-  const getAllNews = (siteId) => {
-    console.log("in getting news ", siteId);
+  const getAllNewsForNewsSite = (newsSite) => {
+    console.log("in getting news ", newsSite);
     axios
-      .get(GET_NEWS_REST_API_URL + "/" + siteId)
+      .post(NEWS_REST_API_URL, { ...newsSite })
       .then((response) => {
         console.log("response ", response);
         if (response.status === 200) {
@@ -71,7 +85,16 @@ function App() {
   };
 
   return (
-    <store.Provider value={[sites, news, selectedSites, setselectedSites]}>
+    <store.Provider
+      value={{
+        sitesObj: [sites],
+        newsObj: [news],
+        selectedSitesObj: [selectedSites, setselectedSites],
+        allNewsObj: [allNews],
+        getAllNews: [getAllNews],
+        onGetAllNewsForNewsSite: [getAllNewsForNewsSite],
+      }}
+    >
       <div
         style={{
           backgroundImage: `url(${bg})`,
@@ -85,16 +108,8 @@ function App() {
         <Router>
           <NavBar />
           <Routes>
-            <Route
-              path="/"
-              element={
-                <NewsSites
-                  // sites={this.state.newsSites}
-                  onGetAllNews={getAllNews}
-                  onLoadLatestNews={loadLatestNews}
-                />
-              }
-            />
+            <Route path="/" element={<NewsFeedHome />} />
+            <Route path="newssites" element={<NewsSites />} />
             <Route path="news" element={<News />} />
           </Routes>
         </Router>

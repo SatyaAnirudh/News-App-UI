@@ -1,42 +1,50 @@
 import React, { useContext, useEffect, useState } from "react";
+import { BackTop } from "antd";
+import "antd/dist/antd.css";
 import { store } from "../App";
 import CardNewsSite from "./CardNewsSite";
 import DropDown from "./DropDown";
 
 function NewsSite(props) {
-  const { onLoadLatestNews, onGetAllNews } = props;
-  //console.log(useContext(store));
-  //const [sites] = useContext(store);
-
-  const [sites, news, selectedSites, setselectedSites] = useContext(store);
-  console.log(selectedSites);
-  //const [activeSite, setactiveSite] = useState("");
+  const { sitesObj, selectedSitesObj, onGetAllNewsForNewsSite } =
+    useContext(store);
+  const [sites] = sitesObj;
+  const [selectedSites, setselectedSites] = selectedSitesObj;
+  const [getAllNewsForNewsSite] = onGetAllNewsForNewsSite;
   const prevSelectedSites = selectedSites;
 
+  const style = {
+    height: 40,
+    width: 40,
+    lineHeight: "40px",
+    borderRadius: 4,
+    backgroundColor: "#1088e9",
+    color: "#fff",
+    textAlign: "center",
+    fontSize: 14,
+  };
+
   const handleChange = (e) => {
-    //setactiveSite(e.target.value);
-    //console.log("change", activeSite);
-    // updateSelectedSites(e.target.value)
-    console.log(sites, "fsdjfs", selectedSites);
     const dummy = sites.filter((item) => item.siteTitle === e.target.value);
-    console.log("dummy", dummy);
     setselectedSites([...selectedSites, dummy[0]]);
     if (selectedSites.size != prevSelectedSites) {
     }
   };
 
-  console.log(selectedSites, "fsdfs");
+  //console.log(selectedSites, "fsdfs");
   return (
     <div className="row">
       <DropDown handleChange={handleChange} />
-      {[...selectedSites].map((site) => (
+      {[...sites].map((site) => (
         <CardNewsSite
           key={site.siteId}
           site={site}
-          onGetAllNews={onGetAllNews}
-          onLoadLatestNews={onLoadLatestNews}
+          onGetAllNewsForNewsSite={getAllNewsForNewsSite}
         />
       ))}
+      <BackTop visibilityHeight={250} duration={200}>
+        <div style={style}>UP</div>
+      </BackTop>
     </div>
   );
 }

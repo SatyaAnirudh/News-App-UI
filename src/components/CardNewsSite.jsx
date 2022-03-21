@@ -3,18 +3,15 @@ import { useNavigate } from "react-router-dom";
 
 function Cardproto(props) {
   const navigate = useNavigate();
-  const { site, onGetAllNews, onLoadLatestNews } = props;
+  const { site, onGetAllNewsForNewsSite } = props;
 
   const handleOnClick = () => {
-    onLoadLatestNews(site);
-    onGetAllNews(site.siteId);
+    onGetAllNewsForNewsSite(site);
     navigate("/news");
-  }; //images(`./${site.siteTitle}.png`).default
-  //onError={(e)=>{e.target.onerror = null; e.target.src="../images/latest_news.png"}} />
-  ////require(images[site.siteTitle]
+  }; 
 
   const importAll = (require) =>
-    //console.log(require)
+
     require.keys().reduce((acc, next) => {
       acc[next.replace("./", "")] = require(next);
       return acc;
@@ -23,7 +20,6 @@ function Cardproto(props) {
   const images = importAll(
     require.context("../images", false, /\.(png|jpe?g|svg)$/)
   );
-  //console.log(require)
 
   return (
     <div className="col-sm-2 m-3">

@@ -16,9 +16,9 @@ function NavBar(props) {
               </NavLink>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#">
-                Link
-              </a>
+              <NavLink className="nav-link" to="newssites">
+                Get News from Specific Channel
+              </NavLink>
             </li>
           </ul>
         </div>

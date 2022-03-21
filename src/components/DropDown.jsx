@@ -3,7 +3,8 @@ import { store } from "../App";
 
 function DropDown(props) {
   const { handleChange } = props;
-  const [sites, setsites] = useContext(store);
+  const { sitesObj } = useContext(store);
+  const [sites] = sitesObj;
 
   let optionTemplate = sites?.map((site) => (
     <option key={site.siteId} value={site.siteTitle}>

@@ -4,9 +4,8 @@ import CardNews from "./CardNews";
 
 function News() {
   console.log(useContext(store));
-  const [sites,news] = useContext(store);
-
-  console.log(news);
+  const { newsObj } = useContext(store);
+  const [news] = newsObj;
 
   return (
     <div>
